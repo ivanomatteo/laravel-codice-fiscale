@@ -12,11 +12,11 @@ class LaravelCodiceFiscale
 
     private $cache = [];
     private $filedNames = [
-        'name' => 'Name',
-        'familyName' => 'Family Name',
-        'dateOfBirth' => 'Date of Birth',
-        'sex' => 'Sex',
-        'cityCode' => 'City Code',
+        'name' => 1,
+        'familyName' => 1,
+        'dateOfBirth' => 1,
+        'sex' => 1,
+        'cityCode' => 1,
     ];
 
     private function parse($cf_str, $century = null)
@@ -40,28 +40,10 @@ class LaravelCodiceFiscale
                 'century' => $century
             ];
         } catch (CodicefiscaleException $ex) {
-
-            switch ($ex->getCode()) {
-                case CodicefiscaleException::FORMAT:
-                    $this->cache[$cf_str] = [
-                        'err' => __('invalid format'),
-                    ];
-                    break;
-                case CodicefiscaleException::DATE_OF_BIRTH:
-                    $this->cache[$cf_str] = [
-                        'err' => __('date of birth do not match')
-                    ];
-                    break;
-                case CodicefiscaleException::CONTROL_DIGIT:
-                    $this->cache[$cf_str] = [
-                        'err' => __('control digit do not match')
-                    ];
-                    break;
-                default:
-                    $this->cache[$cf_str] = [
-                        'err' => __($ex->getMessage())
-                    ];
-            }
+            $this->cache[$cf_str] = [
+                'err' => __('laravel-codice-fiscale::codfisc.'.$ex->getMessageCode()),
+            ];
+            
         }
 
         return $this->cache[$cf_str];
@@ -133,7 +115,7 @@ class LaravelCodiceFiscale
 
                 if (!empty($errs)) {
                     if ($attr) {
-                        $msg .= __('do not match with fiscal code');
+                        $msg .= __('laravel-codice-fiscale::codfisc.field-do-not-match');
                     } else {
 
                         if (!empty($msg)) {
@@ -145,15 +127,15 @@ class LaravelCodiceFiscale
                             if (!empty($err_fields)) {
                                 $err_fields .= ', ';
                             }
-                            $err_fields .= __($this->filedNames[$f]);
+                            $err_fields .= __('laravel-codice-fiscale::codfisc.'.$f);
                         }
 
-                        $msg .= $err_fields . ') ' . __('do not match');
+                        $msg .= $err_fields . ') ' . __('laravel-codice-fiscale::codfisc.do-not-match');
                     }
                 }
             } else {
                 if ($attr) {
-                    $msg .= __('impossible to match with fiscal code: ') . $cf['err'];
+                    $msg .= __('laravel-codice-fiscale::codfisc.impossible-to-match') .': '. $cf['err'];
                 } else {
                     $msg = $cf['err'];
                 }
