@@ -64,7 +64,7 @@ class LaravelCodiceFiscale
 
             $map = [];
             foreach ($parameters as $p) {
-                $p = explode('/', $p);
+                $p = explode('=', $p);
                 $map[$p[0]] = $p[1] ?? $p[0];
             }
 
