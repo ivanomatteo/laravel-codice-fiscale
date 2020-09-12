@@ -54,7 +54,7 @@ $validated = Request::validate( [
     'cityCode' => 'required',
     
     // all rules on fiscal code
-    'fiscalCode' => 'required|codfisc:first_name=name,last_name=familyName,dob=dateOfBirth,sex,cityCode',
+    'fiscalCode' => 'required|codfisc:first_name=name,last_name=familyName,dob=dateOfBirth,sex=sex,cityCode=cityCode',
 ]);
 
 $validated = Request::validate( [    

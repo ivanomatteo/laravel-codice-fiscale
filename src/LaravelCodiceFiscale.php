@@ -61,6 +61,7 @@ class LaravelCodiceFiscale
             $msg = null;
 
             $map = []; // create parameters map
+            
             foreach ($parameters as $i => $p) {
                 if ($i === 0 && strpos($p, '=') === false) {
                     $codfisc = $p;
@@ -69,7 +70,7 @@ class LaravelCodiceFiscale
                     $attr = $p;
                 } else {
                     $p = explode('=', $p);
-                    $map[$p[0]] = $p[1] ?? $p[0];
+                    $map[$p[0]] = $p[1];
                 }
             }
 
@@ -94,29 +95,33 @@ class LaravelCodiceFiscale
                     $map = [$attr => $attribute];
                 }
 
-                $matchData = array_intersect_key($reqData, array_flip($map));
-                $errs = $cf->validate($matchData, $map, true);
+                if (!empty($map)) {
 
-                if (!empty($errs)) {
-                    if ($attr) {
-                        $msg .= __('laravel-codice-fiscale::codfisc.field-do-not-match');
-                    } else {
+                    $matchData = array_intersect_key($reqData, array_flip($map));
+                    $errs = $cf->validate($matchData, $map, true);
 
-                        if (!empty($msg)) {
-                            $msg .= ', ';
-                        }
-                        $msg .= '(';
-                        $err_fields = '';
-                        foreach ($errs as $f) {
-                            if (!empty($err_fields)) {
-                                $err_fields .= ', ';
+                    if (!empty($errs)) {
+                        if ($attr) {
+                            $msg .= __('laravel-codice-fiscale::codfisc.field-do-not-match');
+                        } else {
+
+                            if (!empty($msg)) {
+                                $msg .= ', ';
                             }
-                            $err_fields .= __('laravel-codice-fiscale::codfisc.' . $f);
-                        }
+                            $msg .= '(';
+                            $err_fields = '';
+                            foreach ($errs as $f) {
+                                if (!empty($err_fields)) {
+                                    $err_fields .= ', ';
+                                }
+                                $err_fields .= __('laravel-codice-fiscale::codfisc.' . $f);
+                            }
 
-                        $msg .= $err_fields . ') ' . __('laravel-codice-fiscale::codfisc.do-not-match');
+                            $msg .= $err_fields . ') ' . __('laravel-codice-fiscale::codfisc.do-not-match');
+                        }
                     }
                 }
+
             } else {
                 if ($attr) {
                     $msg .= __('laravel-codice-fiscale::codfisc.impossible-to-match') . ': ' . $cf['err'];
