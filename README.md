@@ -15,6 +15,13 @@ composer require ivanomatteo/laravel-codice-fiscale
 
 ## Usage
 
+publish lang
+
+``` bash
+php artisan vendor:publish --provider "IvanoMatteo\LaravelCodiceFiscale\LaravelCodiceFiscaleServiceProvider"  --tag lang
+
+```
+
 ``` php
 /*
 Fiscal code fields name:
