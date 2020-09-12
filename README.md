@@ -16,7 +16,46 @@ composer require ivanomatteo/laravel-codice-fiscale
 ## Usage
 
 ``` php
-// Usage description here
+/*
+Fiscal code fields name:
+
+    name
+    familyName
+    dateOfBirth
+    sex
+    cityCode
+
+*/
+$validated = Request::validate( [
+    // cf: the field containing the fiscal code
+    // attr: the corrisponding filed name for matching
+    'dob' => 'required|codfisc:cf=fiscalCode,attr=dateOfBirth',
+    'first_name' => 'required|codfisc:cf=fiscalCode,attr=name', 
+    'last_name' => 'required|codfisc:cf=fiscalCode,attr=familyName',
+    
+    //attr: can be omitted if the filed name is alredy correct
+    'sex' => 'required|codfisc:cf=fiscalCode',
+    'cityCode' => 'required|codfisc:cf=fiscalCode',
+    'fiscalCode' => 'required|codfisc',
+]);
+
+$validated = Request::validate( [
+    'first_name' => 'required', 
+    'last_name' => 'required',
+    'dob' => 'required',
+    'sex' => 'required',
+    'cityCode' => 'required',
+    
+    // all rules on fiscal code
+    'fiscalCode' => 'required|codfisc:first_name=name,last_name=familyName,dob=dateOfBirth,sex,cityCode',
+]);
+
+$validated = Request::validate( [    
+    // ...
+    // just check the format
+    'fiscalCode' => 'required|codfisc',
+]);
+
 ```
 
 ### Testing

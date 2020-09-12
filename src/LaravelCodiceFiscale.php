@@ -11,6 +11,7 @@ class LaravelCodiceFiscale
 {
 
     private $cache = [];
+
     private $filedNames = [
         'name' => 1,
         'familyName' => 1,
@@ -19,31 +20,26 @@ class LaravelCodiceFiscale
         'cityCode' => 1,
     ];
 
-    private function parse($cf_str, $century = null)
+    private function parse($cf_str)
     {
         $cf_str = strtoupper(trim($cf_str));
 
         $res = $this->cache[$cf_str] ?? null;
-        if (
-            isset($res['err']) ||
-            (isset($res['cf']) &&
-                !(isset($century) && !isset($res['century'])))
-        ) {
+
+        if (isset($res['err']) || isset($res['cf'])) {
             return $res;
         }
 
         try {
-            $cf = CodiceFiscale::parse($cf_str, $century);
+            $cf = CodiceFiscale::parse($cf_str);
 
             $this->cache[$cf_str] = [
                 'cf' => $cf,
-                'century' => $century
             ];
         } catch (CodicefiscaleException $ex) {
             $this->cache[$cf_str] = [
-                'err' => __('laravel-codice-fiscale::codfisc.'.$ex->getMessageCode()),
+                'err' => __('laravel-codice-fiscale::codfisc.' . $ex->getMessageCode()),
             ];
-            
         }
 
         return $this->cache[$cf_str];
@@ -62,11 +58,12 @@ class LaravelCodiceFiscale
 
             $msg = null;
 
-            $map = [];
+            $map = []; // create parameters map
             foreach ($parameters as $p) {
                 $p = explode('=', $p);
                 $map[$p[0]] = $p[1] ?? $p[0];
             }
+
 
             $codfisc  = null;
             if (isset($map['cf'])) {
@@ -78,30 +75,20 @@ class LaravelCodiceFiscale
                 $attr = $map['attr'];
                 unset($map['attr']);
             }
-            if($codfisc && !$attr){
-                if(isset($this->filedNames[$attribute])){
+            if ($codfisc && !$attr) { // try with current field name
+                if (isset($this->filedNames[$attribute])) {
                     $attr = $attribute;
                 }
             }
 
-            if(($attr || $codfisc) && (!$attr || !$codfisc) ){
+            if (($attr || $codfisc) && (!$attr || !$codfisc)) {
                 throw new \Exception('codfisc validator: arguments attr and codfisc must be specified together');
             }
 
+            // get request data
             $reqData = $validator->getData();
 
-
-            $century = null;
-            $dob = $reqData[$map['dateOfBirth'] ?? null] ?? null;
-            if ($dob) {
-                try {
-                    $tmp = new \DateTime($dob);
-                    $century = (int) $tmp->format('Y');
-                } catch (\Exception $ex) {
-                }
-            }
-
-            $cf = $this->parse($codfisc ? $reqData[$codfisc] : $value, $century);
+            $cf = $this->parse($codfisc ? $reqData[$codfisc] : $value);
 
             if (!isset($cf['err'])) {
                 $cf = $cf['cf'];
@@ -127,7 +114,7 @@ class LaravelCodiceFiscale
                             if (!empty($err_fields)) {
                                 $err_fields .= ', ';
                             }
-                            $err_fields .= __('laravel-codice-fiscale::codfisc.'.$f);
+                            $err_fields .= __('laravel-codice-fiscale::codfisc.' . $f);
                         }
 
                         $msg .= $err_fields . ') ' . __('laravel-codice-fiscale::codfisc.do-not-match');
@@ -135,7 +122,7 @@ class LaravelCodiceFiscale
                 }
             } else {
                 if ($attr) {
-                    $msg .= __('laravel-codice-fiscale::codfisc.impossible-to-match') .': '. $cf['err'];
+                    $msg .= __('laravel-codice-fiscale::codfisc.impossible-to-match') . ': ' . $cf['err'];
                 } else {
                     $msg = $cf['err'];
                 }
