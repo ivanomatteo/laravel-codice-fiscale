@@ -34,15 +34,15 @@ Fiscal code fields name:
 
 */
 $validated = Request::validate( [
-    // cf: the field containing the fiscal code
-    // attr: the corrisponding filed name for matching
-    'dob' => 'required|codfisc:cf=fiscalCode,attr=dateOfBirth',
-    'first_name' => 'required|codfisc:cf=fiscalCode,attr=name', 
-    'last_name' => 'required|codfisc:cf=fiscalCode,attr=familyName',
+    // first parameter: the field containing the fiscal code
+    // second parameter: the corrisponding filed name for matching
+    'dob' => 'required|codfisc:fiscalCode,dateOfBirth',
+    'first_name' => 'required|codfisc:fiscalCode,name', 
+    'last_name' => 'required|codfisc:fiscalCode,familyName',
     
-    //attr: can be omitted if the filed name is alredy correct
-    'sex' => 'required|codfisc:cf=fiscalCode',
-    'cityCode' => 'required|codfisc:cf=fiscalCode',
+    //second parameter: can be omitted if the filed name is alredy correct
+    'sex' => 'required|codfisc:fiscalCode',
+    'cityCode' => 'required|codfisc:fiscalCode',
     'fiscalCode' => 'required|codfisc',
 ]);
 

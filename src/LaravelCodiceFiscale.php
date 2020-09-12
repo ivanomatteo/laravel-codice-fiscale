@@ -56,33 +56,30 @@ class LaravelCodiceFiscale
             //dd($validator->attributes());
             //dd(get_class_methods($validator));
 
+            $codfisc  = null;
+            $attr  = null;
             $msg = null;
 
             $map = []; // create parameters map
-            foreach ($parameters as $p) {
-                $p = explode('=', $p);
-                $map[$p[0]] = $p[1] ?? $p[0];
-            }
-
-
-            $codfisc  = null;
-            if (isset($map['cf'])) {
-                $codfisc = $map['cf'];
-                unset($map['cf']);
-            }
-            $attr  = null;
-            if (isset($map['attr'])) {
-                $attr = $map['attr'];
-                unset($map['attr']);
-            }
-            if ($codfisc && !$attr) { // try with current field name
-                if (isset($this->filedNames[$attribute])) {
-                    $attr = $attribute;
+            foreach ($parameters as $i => $p) {
+                if ($i === 0 && strpos($p, '=') === false) {
+                    $codfisc = $p;
+                }
+                if ($i === 1 && strpos($p, '=') === false) {
+                    $attr = $p;
+                } else {
+                    $p = explode('=', $p);
+                    $map[$p[0]] = $p[1] ?? $p[0];
                 }
             }
 
-            if (($attr || $codfisc) && (!$attr || !$codfisc)) {
-                throw new \Exception('codfisc validator: arguments attr and codfisc must be specified together');
+            if ($codfisc && !$attr) { // try with current field name
+                $attr = $attribute;
+            }
+            //dump(compact('attribute', 'codfisc', 'attr'));
+
+            if ($attr && empty($this->filedNames[$attr])) {
+                throw new \Exception("unknown attr: $attr");
             }
 
             // get request data
