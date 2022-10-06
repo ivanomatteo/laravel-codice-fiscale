@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "ivanomatteo/codice-fiscale": "0.1.8"
+        "ivanomatteo/codice-fiscale": "0.1.9"
     },
     "require-dev": {
         "orchestra/testbench": "^4.0",
