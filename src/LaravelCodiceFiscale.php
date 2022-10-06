@@ -70,7 +70,9 @@ class LaravelCodiceFiscale
                     $attr = $p;
                 } else {
                     $p = explode('=', $p);
-                    $map[$p[0]] = $p[1];
+                    if(isset($p[1])){
+                        $map[$p[0]] = $p[1];
+                    }
                 }
             }
 
