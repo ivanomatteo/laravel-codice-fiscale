@@ -26,7 +26,7 @@ class LaravelCodiceFiscaleServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__ . '/../config/config.php' => config_path('laravel-codice-fiscale.php'),
-            ], 'laravel-codice-fiscale');
+            ], 'config');
 
             // Publishing the views.
             /*$this->publishes([
