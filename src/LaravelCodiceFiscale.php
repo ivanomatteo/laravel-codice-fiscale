@@ -126,7 +126,9 @@ class LaravelCodiceFiscale
 
             } else {
                 if ($attr) {
-                    $msg .= __('laravel-codice-fiscale::codfisc.impossible-to-match') . ': ' . $cf['err'];
+                    if (config('laravel-codice-fiscale.impossible-to-match')) {
+                        $msg .= __('laravel-codice-fiscale::codfisc.impossible-to-match') . ': ' . $cf['err'];
+                    }
                 } else {
                     $msg = $cf['err'];
                 }

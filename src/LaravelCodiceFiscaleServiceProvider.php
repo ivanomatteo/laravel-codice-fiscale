@@ -18,15 +18,15 @@ class LaravelCodiceFiscaleServiceProvider extends ServiceProvider
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'laravel-codice-fiscale');
         // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         // $this->loadRoutesFrom(__DIR__.'/routes.php');
-
+        $this->mergeConfigFrom(__DIR__ . '/../config/config.php','laravel-codice-fiscale');
 
         \LaravelCodiceFiscale::registerValidator();
     
 
         if ($this->app->runningInConsole()) {
-            // $this->publishes([
-            //     __DIR__.'/../config/config.php' => config_path('laravel-codice-fiscale.php'),
-            // ], 'config');
+            $this->publishes([
+                __DIR__ . '/../config/config.php' => config_path('laravel-codice-fiscale.php'),
+            ], 'laravel-codice-fiscale');
 
             // Publishing the views.
             /*$this->publishes([
