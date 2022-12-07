@@ -1,11 +1,6 @@
 <?php
 
-
-
-
-
 return [
-
     'field-do-not-match' => 'do not match with fiscal code',
     'do-not-match' => 'do not match',
     'name' => 'Name',

@@ -21,7 +21,6 @@ publish lang
 php artisan vendor:publish --provider "IvanoMatteo\LaravelCodiceFiscale\LaravelCodiceFiscaleServiceProvider"  --tag lang
 
 php artisan vendor:publish --provider "IvanoMatteo\LaravelCodiceFiscale\LaravelCodiceFiscaleServiceProvider"  --tag config
-
 ```
 
 ``` php
