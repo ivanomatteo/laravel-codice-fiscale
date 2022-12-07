@@ -20,8 +20,8 @@ class LaravelCodiceFiscaleServiceProvider extends ServiceProvider
         // $this->loadRoutesFrom(__DIR__.'/routes.php');
         $this->mergeConfigFrom(__DIR__ . '/../config/config.php','laravel-codice-fiscale');
 
-        \LaravelCodiceFiscale::registerValidator();
-    
+        LaravelCodiceFiscale::registerValidator();
+
 
         if ($this->app->runningInConsole()) {
             $this->publishes([

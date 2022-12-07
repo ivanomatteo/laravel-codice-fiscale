@@ -2,7 +2,9 @@
 
 namespace IvanoMatteo\LaravelCodiceFiscale;
 
+use Exception;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Validator;
 use IvanoMatteo\CodiceFiscale\CodiceFiscale;
 use IvanoMatteo\CodiceFiscale\CodicefiscaleException;
 
@@ -45,7 +47,7 @@ class LaravelCodiceFiscale
 
     public function registerValidator()
     {
-        \Validator::extend('codfisc', function ($attribute, $value, $parameters, $validator) {
+        Validator::extend('codfisc', function ($attribute, $value, $parameters, $validator) {
 
             //dd($attribute);
             //dd($validator->attributes());
@@ -76,7 +78,7 @@ class LaravelCodiceFiscale
             //dump(compact('attribute', 'codfisc', 'attr'));
 
             if ($attr && empty($this->filedNames[$attr])) {
-                throw new \Exception("unknown attr: $attr");
+                throw new Exception("unknown attr: $attr");
             }
 
             // get request data
