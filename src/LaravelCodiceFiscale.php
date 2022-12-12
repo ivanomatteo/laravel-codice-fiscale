@@ -2,14 +2,14 @@
 
 namespace IvanoMatteo\LaravelCodiceFiscale;
 
-use DateTime;
+use Exception;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Validator;
 use IvanoMatteo\CodiceFiscale\CodiceFiscale;
 use IvanoMatteo\CodiceFiscale\CodicefiscaleException;
 
-
 class LaravelCodiceFiscale
 {
-
     private $cache = [];
 
     private $filedNames = [
@@ -45,12 +45,9 @@ class LaravelCodiceFiscale
         return $this->cache[$cf_str];
     }
 
-
-
     public function registerValidator()
     {
-
-        \Validator::extend('codfisc', function ($attribute, $value, $parameters, $validator) {
+        Validator::extend('codfisc', function ($attribute, $value, $parameters, $validator) {
 
             //dd($attribute);
             //dd($validator->attributes());
@@ -61,7 +58,6 @@ class LaravelCodiceFiscale
             $msg = null;
 
             $map = []; // create parameters map
-            
             foreach ($parameters as $i => $p) {
                 if ($i === 0 && strpos($p, '=') === false) {
                     $codfisc = $p;
@@ -82,13 +78,14 @@ class LaravelCodiceFiscale
             //dump(compact('attribute', 'codfisc', 'attr'));
 
             if ($attr && empty($this->filedNames[$attr])) {
-                throw new \Exception("unknown attr: $attr");
+                throw new Exception("unknown attr: $attr");
             }
 
             // get request data
             $reqData = $validator->getData();
+            $reqData = Arr::dot($reqData);
 
-            $cf = $this->parse($codfisc ? $reqData[$codfisc] : $value);
+            $cf = $this->parse($codfisc ? Arr::get($reqData, $codfisc) : $value);
 
             if (!isset($cf['err'])) {
                 $cf = $cf['cf'];
@@ -143,8 +140,8 @@ class LaravelCodiceFiscale
                 );
                 return false;
             }
-
             return true;
+
         }, ':attribute :cf_error');
     }
 }

@@ -4,9 +4,6 @@ namespace IvanoMatteo\LaravelCodiceFiscale;
 
 use Illuminate\Support\Facades\Facade;
 
-/**
- * @see \IvanoMatteo\LaravelCodiceFiscale\Skeleton\SkeletonClass
- */
 class LaravelCodiceFiscaleFacade extends Facade
 {
     /**
